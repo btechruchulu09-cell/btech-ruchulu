@@ -1,0 +1,257 @@
+import { useState } from "react";
+import Navigation from "@/components/Navigation";
+import { Button } from "@/components/ui/button";
+import heroImage from "@/assets/hero-image.jpg";
+import { MessageCircle } from "lucide-react";
+import { Search } from "lucide-react";
+
+
+interface Product {
+  id: number;
+  name: string;
+  category: string;
+  price: string;
+  image: string;
+  isVeg: boolean;
+  type: "pickle" | "snack" | "podi";
+  subCategory?: "Biscuits" | "Laddus" | "Savory Snacks" | "Traditional Sweets";
+}
+// ✅ WhatsApp contact setup
+  const whatsappNumber = "918639619426"; // Replace with your own (no + or spaces)
+  const whatsappMessage = "Hello! I'm interested in ordering from Btech Ruchulu.";
+
+  const isActive = (path: string) => location.pathname === path;
+  // 🔻 your product list (not repeated here for brevity — keep your full list)
+
+const products: Product[] = [
+  // 🥒 VEG PICKLES
+  { id: 1, name: "Tomato Pickle", category: "Pickles", price: "₹150", image: "https://www.indianhealthyrecipes.com/wp-content/uploads/2022/01/tomato-pickle-recipe.jpg", isVeg: true, type: "pickle" },
+  { id: 2, name: "Mango Pickle", category: "Pickles", price: "₹180", image: "https://cinnamonsnail.com/wp-content/uploads/2023/07/Mango-pickle-05.jpg", isVeg: true, type: "pickle" },
+  { id: 3, name: "Sweet Mango Pickle", category: "Pickles", price: "₹190", image: "https://vellankifoods.com/cdn/shop/products/sweet_mango_pickle_bellam_avakaya_pickles.jpg?v=1680181742", isVeg: true, type: "pickle" },
+  { id: 4, name: "Garlic Mango Pickle", category: "Pickles", price: "₹200", image: "https://srinus.in/wp-content/uploads/2025/04/1-4.jpg", isVeg: true, type: "pickle" },
+  { id: 5, name: "Allam Mango Pickle", category: "Pickles", price: "₹195", image: "https://lalithasbhimavarampickles.com/cdn/shop/files/mamidi-alllam-pickle_jpg_f413620c-ae47-4902-9ef2-14e117fe257e.webp?v=1748082839", isVeg: true, type: "pickle" },
+  { id: 6, name: "Drumstick Pickle", category: "Pickles", price: "₹170", image: "https://i.ytimg.com/vi/3fGHSo9HVCs/sddefault.jpg", isVeg: true, type: "pickle" },
+  { id: 7, name: "Red Chilli Pickle", category: "Pickles", price: "₹160", image: "https://www.whiskaffair.com/wp-content/uploads/2021/04/Lal-Mirch-Ka-Achar-2-3-1.jpg", isVeg: true, type: "pickle" },
+  { id: 8, name: "Gongura Pickle", category: "Pickles", price: "₹180", image: "https://i0.wp.com/foodonfarmpickles.com/wp-content/uploads/2024/07/Gongura-scaled.webp?fit=1920%2C1281&ssl=1", isVeg: true, type: "pickle" },
+  { id: 9, name: "Red Chilli Gongura Pickle", category: "Pickles", price: "₹185", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwl6FB5787mBnHskzHcTS3tc5u0k5dhfSYxQ&s", isVeg: true, type: "pickle" },
+  { id: 10, name: "Amla Pickle", category: "Pickles", price: "₹165", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcelo0HgQpObKoilB3vQYBk4T055nuYKiNgQ&s", isVeg: true, type: "pickle" },
+  { id: 11, name: "Tamarind Pickle", category: "Pickles", price: "₹155", image: "https://vellankifoods.com/cdn/shop/products/tamarind_pickle.jpg?v=1680181752", isVeg: true, type: "pickle" },
+  { id: 12, name: "Podhina Pickle", category: "Pickles", price: "₹145", image: "https://cdn.dotpe.in/longtail/store-items/5739802/tHXOPtOe.jpeg", isVeg: true, type: "pickle" },
+  { id: 13, name: "Kothimeera Pickle", category: "Pickles", price: "₹145", image: "https://images.aasaan.shop/stores/pavifoods/products/product_images/product_1668409144363.jpeg", isVeg: true, type: "pickle" },
+  { id: 14, name: "Kakara Pickle", category: "Pickles", price: "₹175", image: "https://aahaaramonline.com/wp-content/uploads/2020/02/Kakarakaya_Nilava_Pachadi_1.jpg", isVeg: true, type: "pickle" },
+  { id: 15, name: "Karivepaku Pickle", category: "Pickles", price: "₹140", image: "https://vismaifood.com/storage/app/uploads/public/70e/340/bcf/thumb__1200_0_0_0_auto.jpg", isVeg: true, type: "pickle" },
+  { id: 16, name: "Lemon Pickle", category: "Pickles", price: "₹150", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAbgc4_KiZePzHkgj4EUjRQJBZUPAR5mlcdQ&s", isVeg: true, type: "pickle" },
+  { id: 17, name: "Mango Thurumu Pickle", category: "Pickles", price: "₹185", image: "https://hadvifoods.com/cdn/shop/files/Instant-Grated-Mango-Pickle-Mango-Thokku-V2.jpg?v=1727722255&width=1445", isVeg: true, type: "pickle" },
+  { id: 18, name: "Carrot Pickle", category: "Pickles", price: "₹155", image: "https://cinnamonsnail.com/wp-content/uploads/2023/07/Carrot-pickle-06.jpg", isVeg: true, type: "pickle" },
+  { id: 19, name: "Green Chilli Pickle", category: "Pickles", price: "₹160", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBHhuUx3O1SANz-DDJxQ-2qXVYmF3ALniK_A&s", isVeg: true, type: "pickle" },
+  { id: 20, name: "Garlic Pickle", category: "Pickles", price: "₹170", image: "https://static.toiimg.com/photo/58413147.cms", isVeg: true, type: "pickle" },
+  { id: 21, name: "Allam Pickle", category: "Pickles", price: "₹165", image: "https://www.indianhealthyrecipes.com/wp-content/uploads/2022/07/allam-pachadi-recipe-2.jpg", isVeg: true, type: "pickle" },
+
+  // 🍗 NON-VEG PICKLES
+  { id: 22, name: "Chicken Bones Pickle", category: "Pickles", price: "₹260", image: "https://i0.wp.com/foodonfarmpickles.com/wp-content/uploads/2023/03/chicken-bone-pickle.jpg?resize=1024%2C671&ssl=1", isVeg: false, type: "pickle" },
+  { id: 23, name: "Chicken Boneless Pickle", category: "Pickles", price: "₹280", image: "https://m.media-amazon.com/images/X/bxt1/M/rbxt1RaiMBxzUks._SL640_QL75_FMwebp_.jpg", isVeg: false, type: "pickle" },
+  { id: 24, name: "Gongura Chicken Pickle", category: "Pickles", price: "₹290", image: "https://sitarafoods.com/wp-content/uploads/2022/07/02-1.jpg", isVeg: false, type: "pickle" },
+  { id: 25, name: "Prawns Pickle", category: "Pickles", price: "₹300", image: "https://www.licious.in/blog/wp-content/uploads/2022/03/shutterstock_617174738-min-600x600.jpg", isVeg: false, type: "pickle" },
+  { id: 26, name: "Mutton Pickle", category: "Pickles", price: "₹320", image: "https://i0.wp.com/ahahomefoods.com/wp-content/uploads/2023/02/Mutton-Pickle.jpg?fit=600%2C600&ssl=1", isVeg: false, type: "pickle" },
+
+  // 🧂 KARAMS & PODIS
+  { id: 27, name: "Kakara Karam", category: "Karam Podis", price: "₹110", image: "https://vellankifoods.com/cdn/shop/products/kakarakaya_karam_bittergourd_1200x1200.jpg?v=1680180505", isVeg: true, type: "podi" },
+  { id: 28, name: "Palli Karam", category: "Karam Podis", price: "₹100", image: "https://www.godavarivantillu.com/cdn/shop/products/PalliKaramPodi.jpg?v=1627681911", isVeg: true, type: "podi" },
+  { id: 29, name: "Nalleru Karam", category: "Karam Podis", price: "₹115", image: "https://i0.wp.com/swathihomefoods.in/wp-content/uploads/2025/02/nalla-karam.webp?fit=800%2C800&ssl=1", isVeg: true, type: "podi" },
+  { id: 30, name: "Kothimeera Karam", category: "Karam Podis", price: "₹105", image: "https://bandarmithai.in/cdn/shop/products/WhatsAppImage2021-07-27at7.59.28PM.jpg?v=1628176093", isVeg: true, type: "podi" },
+  { id: 31, name: "Kandi Podi", category: "Karam Podis", price: "₹95", image: "https://www.vahrehvah.com/indianfood_org/wp-content/uploads/2010/12/ygVUQXjHId.jpg", isVeg: true, type: "podi" },
+  { id: 32, name: "Pappula Karam", category: "Karam Podis", price: "₹100", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3jDB89NyoYyN3dhVHw7cQXCSJ1syg_Xu1bA&s", isVeg: true, type: "podi" },
+  { id: 33, name: "Karivepaku Karam", category: "Karam Podis", price: "₹110", image: "https://www.whiskaffair.com/wp-content/uploads/2021/01/Karivepaku-Podi-2-3.jpg", isVeg: true, type: "podi" },
+  { id: 34, name: "Nuvvula Karam", category: "Karam Podis", price: "₹105", image: "https://bandarmithai.in/cdn/shop/products/nuvvula_karam.jpg?v=1617381294", isVeg: true, type: "podi" },
+  { id: 35, name: "Avisaginjalu Karam", category: "Karam Podis", price: "₹120", image:"https://vismaifood.com/storage/app/uploads/public/b03/67c/ea7/thumb__700_0_0_0_auto.jpg", isVeg: true, type: "podi" },
+  { id: 36, name: "Kobbari Karam", category: "Karam Podis", price: "₹115", image: "https://i0.wp.com/ahahomefoods.com/wp-content/uploads/2023/02/Kobbari-karam-Podi.jpg?fit=600%2C600&ssl=1", isVeg: true, type: "podi" },
+  { id: 37, name: "Vellulli Karam", category: "Karam Podis", price: "₹110", image: "https://sitarafoods.com/wp-content/uploads/2022/07/02-36.jpg", isVeg: true, type: "podi" },
+  { id: 38, name: "Miriyala Karam", category: "Karam Podis", price: "₹100", image: "https://momssnacksbox.com/wp-content/uploads/2021/05/nalla-karam-podi-2.jpg", isVeg: true, type: "podi" },
+  { id: 39, name: "Munagaku Karam", category: "Karam Podis", price: "₹105", image: "https://nmfoodsofficial.com/wp-content/uploads/2024/08/mungaku-karam.jpg", isVeg: true, type: "podi" },
+  { id: 40, name: "Nalla Karam", category: "Karam Podis", price: "₹95", image: "https://cdn.dotpe.in/longtail/store-items/6934651/i4qwAyhw.jpeg", isVeg: true, type: "podi" },
+
+// 🍪 SNACKS & SWEETS
+{ id: 101, name: "Ariselu", category: "Sweets", subCategory: "Traditional Sweets", price: "₹140", image: "https://vellankifoods.com/cdn/shop/products/ariselu_ghee_1200x1200.jpg?v=1679896343", isVeg: true, type: "snack" },
+{ id: 102, name: "Nuvvula Ariselu", category: "Sweets", subCategory: "Traditional Sweets", price: "₹150", image: "https://savithrammas.com/site/image/cache/catalog/products/Nuvvula-Ariselu(Ghee)/Nuvvula%20Ariselu-800x800.jpg", isVeg: true, type: "snack" },
+{ id: 103, name: "Bhatani Green/Red", category: "Snacks", subCategory: "Savory Snacks", price: "₹130", image: "https://thepeskyvegan.com/wp-content/uploads/2022/06/roasted-peas-feature.jpg", isVeg: true, type: "snack" },
+{ id: 104, name: "Masala Bundhi", category: "Snacks", subCategory: "Savory Snacks", price: "₹120", image: "https://madhurasrecipe.com/wp-content/uploads/2020/10/Masala-Boondi-post.jpg", isVeg: true, type: "snack" },
+{ id: 105, name: "Minapa Chakkarallu", category: "Snacks", subCategory: "Savory Snacks", price: "₹130", image: "https://i.ytimg.com/vi/8XLhUARI5rk/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLDW-RPA28_Xo1Ns7vLRrzILGzW9Sg", isVeg: true, type: "snack" },
+{ id: 106, name: "Minapa Sanna Chakkaralu", category: "Snacks", subCategory: "Savory Snacks", price: "₹135", image: "https://sakalavarisyamfoods.com/wp-content/uploads/2022/11/Minapa-Chakralu.jpg", isVeg: true, type: "snack" },
+{ id: 107, name: "Janthikalu", category: "Snacks", subCategory: "Savory Snacks", price: "₹120", image: "https://s3-ap-south-1.amazonaws.com/betterbutterbucket-silver/sujatha-ratnala145571392356c46e826052e.jpeg", isVeg: true, type: "snack" },
+{ id: 108, name: "Chekkalu", category: "Snacks", subCategory: "Savory Snacks", price: "₹110", image: "https://www.indianhealthyrecipes.com/wp-content/uploads/2024/06/chekkalu-recipe-480x270.jpg", isVeg: true, type: "snack" },
+{ id: 110, name: "Gavvalu Spice", category: "Snacks", subCategory: "Savory Snacks", price: "₹130", image: "https://www.godavarivantillu.com/cdn/shop/products/KaramGavvalu_HotGavvalu.png?v=1604850541", isVeg: true, type: "snack" },
+{ id: 111, name: "Sugar Gavvalu", category: "Sweets", subCategory: "Traditional Sweets", price: "₹140", image: "https://www.telanganapindivantalu.in/wp-content/uploads/2019/12/gavvalu-sugar.jpg", isVeg: true, type: "snack" },
+{ id: 112, name: "Ballam Gavvalu", category: "Sweets", subCategory: "Traditional Sweets", price: "₹145", image: "https://www.godavarivantillu.com/cdn/shop/products/bellam-gavvalu-original-godavari-recipe-445.png?v=1638882730", isVeg: true, type: "snack" },
+{ id: 113, name: "Cornflex", category: "Snacks", subCategory: "Savory Snacks", price: "₹130", image: "https://cherrypick.city/cdn/shop/products/Corn_Flakes-_1_-720x400.jpg?v=1647819712", isVeg: true, type: "snack" },
+{ id: 114, name: "Atukula Mixter", category: "Snacks", subCategory: "Savory Snacks", price: "₹125", image: "https://www.godavarivantillu.com/cdn/shop/files/peacocklife4555-Edit_a8244da5-23d8-4e38-a9ad-edb81416d3fd-removebg-preview_1.png?v=1709700897", isVeg: true, type: "snack" },
+{ id: 115, name: "Misurpak", category: "Sweets", subCategory: "Traditional Sweets", price: "₹180", image: "https://www.indianhealthyrecipes.com/wp-content/uploads/2021/10/mysore-pak.jpg", isVeg: true, type: "snack" },
+{ id: 116, name: "Gulabjamun", category: "Sweets", subCategory: "Traditional Sweets", price: "₹190", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT30Cs6kNaab0eF8hWt37Htc4SVSIG3rNj3WQ&s", isVeg: true, type: "snack" },
+{ id: 117, name: "Kajalu", category: "Sweets", subCategory: "Traditional Sweets", price: "₹160", image: "https://www.godavarivantillu.com/cdn/shop/products/tapeswaram-madatha-kaja-331_1200x1200.jpg?v=1637866872", isVeg: true, type: "snack" },
+{ id: 118, name: "Dal Pappu", category: "Snacks", subCategory: "Savory Snacks", price: "₹120", image: "https://anusharaji.wordpress.com/wp-content/uploads/2017/02/chana_fried.jpg", isVeg: true, type: "snack" },
+{ id: 119, name: "Channa Masala", category: "Snacks", subCategory: "Savory Snacks", price: "₹125", image: "https://sinfullyspicy.com/wp-content/uploads/2023/03/1200-by-1200-images-6.jpg", isVeg: true, type: "snack" },
+{ id: 120, name: "Palli Pakodi", category: "Snacks", subCategory: "Savory Snacks", price: "₹135", image: "https://minnieintiruchulu.com/wp-content/uploads/2025/03/1000212314.jpg", isVeg: true, type: "snack" },
+{ id: 121, name: "Chakodi", category: "Snacks", subCategory: "Savory Snacks", price: "₹125", image: "https://ayrahomefoods.com/wp-content/uploads/2025/05/AHF-16.jpg", isVeg: true, type: "snack" },
+{ id: 122, name: "Pappu Chakodi", category: "Snacks", subCategory: "Savory Snacks", price: "₹130", image: "https://www.godavarivantillu.com/cdn/shop/products/SpecialNarayanaLankaPappuChegodiwithourfoodcolor.png?v=1596976258", isVeg: true, type: "snack" },
+{ id: 123, name: "Kobari Loveju", category: "Sweets", subCategory: "Traditional Sweets", price: "₹150", image: "https://www.indianhealthyrecipes.com/wp-content/uploads/2013/10/coconut-laddu-recipe-with-jaggery.webp", isVeg: true, type: "snack" },
+{ id: 124, name: "Bundhi Metaee", category: "Sweets", subCategory: "Traditional Sweets", price: "₹140", image: "https://vellankifoods.com/cdn/shop/products/boondi_mithai_atchu_1200x1200.jpg?v=1680179384", isVeg: true, type: "snack" },
+{ id: 125, name: "Kajjikayalu", category: "Sweets", subCategory: "Traditional Sweets", price: "₹160", image: "https://www.masalakorb.com/wp-content/uploads/2015/03/Kajjikayalu-Recipe-Traditional-Baked-V6-500x500.jpg", isVeg: true, type: "snack" },
+// 🍯 LADDUS (Under Sweets)
+{ id: 139, name: "Minapa Laddu(no sugar)", category: "Sweets", subCategory: "Laddus", price: "₹160", image: "https://www.laddupallem.com/cdn/shop/files/MinapaLaddu.jpg?v=1746120121", isVeg: true, type: "snack" },
+{ id: 140, name: "Jonna Laddu(no sugar)", category: "Sweets", subCategory: "Laddus", price: "₹150", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8jH1mv75-29HgxADs5DwFS-N4js5qCkiRCQ&s", isVeg: true, type: "snack" },
+{ id: 141, name: "Koralu Laddu(no sugar)", category: "Sweets", subCategory: "Laddus", price: "₹160", image: "https://laddubox.in/cdn/shop/products/rendered_fa297f57-0ca3-4d65-a7a5-c5ac4c4dbd35_2048x.jpg?v=1603863150", isVeg: true, type: "snack" },
+{ id: 142, name: "Nuvvula Laddu(no sugar)", category: "Sweets", subCategory: "Laddus", price: "₹150", image: "https://savithrammas.com/site/image/cache/catalog/products/Nuvvula-Laddu/Nuvvula%20Laddu%201-800x800.jpg", isVeg: true, type: "snack" },
+{ id: 143, name: "Avisaginjala Laddu(no sugar)", category: "Sweets", subCategory: "Laddus", price: "₹170", image: "https://kandrafoods.com/wp-content/uploads/2021/06/flaxseed-ladoo-recipe-3.jpg", isVeg: true, type: "snack" },
+{ id: 144, name: "Ragi Laddu(no sugar)", category: "Sweets", subCategory: "Laddus", price: "₹150", image: "https://www.indianhealthyrecipes.com/wp-content/uploads/2014/09/ragi-ladoo-1-500x500.jpg", isVeg: true, type: "snack" },
+{ id: 145, name: "Pappu Undalu(no sugar)", category: "Sweets", subCategory: "Laddus", price: "₹150", image: "https://3.bp.blogspot.com/-2xXMUdJAujs/TXzwAQSHrfI/AAAAAAAABdI/kgX0070Cuq0/s1600/Putnala%2Bpappu%2Bvundalu.JPG", isVeg: true, type: "snack" },
+
+// 🍪 BISCUITS (Under Snacks)
+{ id: 147, name: "Munagaku Biscuits(no maida)", category: "Snacks", subCategory: "Biscuits", price: "₹130", image: "https://i.ytimg.com/vi/GQbdZutcJTM/sddefault.jpg", isVeg: true, type: "snack" },
+{ id: 148, name: "Ragi Biscuits(no maida)", category: "Snacks", subCategory: "Biscuits", price: "₹125", image: "https://nativespecial.com/wp-content/uploads/2019/11/Ragi-Bicuit_DP.jpg", isVeg: true, type: "snack" },
+{ id: 149, name: "Jonna Biscuits(no maida)", category: "Snacks", subCategory: "Biscuits", price: "₹120", image: "https://cdn.dotpe.in/longtail/store-items/4882616/caXWIc4X.jpeg", isVeg: true, type: "snack" },
+{ id: 150, name: "Badam Biscuits(no maida)", category: "Snacks", subCategory: "Biscuits", price: "₹140", image: "https://www.yummytummyaarthi.com/wp-content/uploads/2018/05/1-6.jpg", isVeg: true, type: "snack" },
+{ id: 151, name: "Kaju Biscuits(no maida)", category: "Snacks", subCategory: "Biscuits", price: "₹140", image: "https://ollisbakehouse.com/cdn/shop/files/square_9ccc1756-5d4d-47bc-890b-160925cb8d26.jpg?v=1703763925", isVeg: true, type: "snack" },
+{ id: 152, name: "Dry Fruit Mixed Biscuits(no maida)", category: "Snacks", subCategory: "Biscuits", price: "₹150", image: "https://www.naario.com/cdn/shop/articles/0e5abe56-f8a9-4dcd-bd55-f898361b1027-60d9e89672a53a000199bd9c.jpg?v=1705669828&width=2000", isVeg: true, type: "snack" },
+
+];
+
+const Index = () => {
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+const [searchTerm, setSearchTerm] = useState("");
+
+const filteredProducts = products.filter((product) => {
+  const matchesCategory =
+    selectedCategory === "all" ||
+    (selectedCategory === "veg-pickle" && product.type === "pickle" && product.isVeg) ||
+    (selectedCategory === "non-veg-pickle" && product.type === "pickle" && !product.isVeg) ||
+    (selectedCategory === "podi" && product.type === "podi") ||
+    (selectedCategory === "savory-snacks" && product.subCategory === "Savory Snacks") ||
+    (selectedCategory === "traditional-sweets" && product.subCategory === "Traditional Sweets");
+
+  const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+  
+  return matchesCategory && matchesSearch;
+});
+
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Navigation />
+{/* This comment works inside JSX */}
+     {/* Hero Section */}
+      <section className="relative h-[500px] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${heroImage})` }}>
+          <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/80 to-background/50" />
+        </div>
+        <div className="relative z-10 container mx-auto px-4 text-center md:text-left">
+          <h1 className="text-4xl md:text-6xl font-bold mb-4 max-w-2xl">
+            Authentic Indian{" "}
+            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              Flavors
+            </span>{" "}
+            Delivered
+          </h1>
+          <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl">
+            Traditional pickles, aromatic karam podis, and delicious snacks made with love and authentic recipes.
+          </p>
+          <Button variant="hero"
+  size="lg"
+  className="text-base"
+  onClick={() => {
+    const productsSection = document.getElementById("products-section");
+    if (productsSection) {
+      productsSection.scrollIntoView({ behavior: "smooth" });
+    }
+  }}>
+            Explore Products
+          </Button>
+        </div>
+      </section>
+
+      {/* Filters */}
+      <section id="products-section" className="container mx-auto px-4 py-16">
+
+        <div className="mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+    <h2 className="text-3xl font-bold">Our Products</h2>
+
+    <div className="relative w-full sm:w-80">
+      <Search className="absolute left-3 top-2.5 w-5 h-5 text-muted-foreground" />
+      <input
+        type="text"
+        placeholder="Search for a product..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="border border-border rounded-lg pl-10 pr-4 py-2 w-full bg-background focus:ring-2 focus:ring-primary focus:outline-none"
+      />
+    </div>
+  </div>
+<div className="flex flex-wrap gap-2">
+            {[
+              { id: "all", label: "All Products" },
+              { id: "veg-pickle", label: "Veg Pickles" },
+              { id: "non-veg-pickle", label: "Non-Veg Pickles" },
+              { id: "podi", label: "Karam Podis" },
+              { id: "savory-snacks", label: "Snacks" },
+              { id: "traditional-sweets", label: "Sweets" },
+            ].map((filter) => (
+              <Button
+                key={filter.id}
+                variant={selectedCategory === filter.id ? "default" : "outline"}
+                onClick={() => setSelectedCategory(filter.id)}
+              >
+                {filter.label}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {/* Product Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredProducts.map((product) => (
+            <div
+              key={product.id}
+              className="bg-card border rounded-xl overflow-hidden shadow hover:shadow-lg transition"
+            >
+              <img src={product.image} alt={product.name} className="w-full h-56 object-cover" />
+              <div className="p-4 text-center">
+                <h3 className="font-semibold text-lg text-gray-800">{product.name}</h3>
+                <p className="text-muted-foreground">{product.category}</p>
+                <p className="text-primary font-bold mt-2">{product.price}</p>
+                <Button  className="mt-3 w-full bg-green-600 text-white hover:bg-green-700"
+  onClick={() => {
+    const message = `Hello! I'm interested in ordering ${product.name} (${product.price}).`;
+    const phoneNumber = "918639619426"; // 🔁 Replace with your WhatsApp number (no + or spaces)
+    window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, "_blank");
+  }}>
+                  Order Now
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+      {/* ✅ Floating WhatsApp Button */}
+      <Button
+        onClick={() =>
+          window.open(
+            `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`,
+            "_blank"
+          )
+        }
+        className="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white rounded-full p-4 shadow-lg transition-all duration-300 animate-bounce"
+        aria-label="Chat on WhatsApp"
+      >
+        <MessageCircle className="w-7 h-7" />
+      </Button>
+
+      {/* Footer */}
+      <footer className="bg-card border-t border-border mt-16 py-8">
+        <div className="container mx-auto px-4 text-center text-muted-foreground">
+          <p>&copy; 2025 Btech Ruchulu. All rights reserved.</p>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default Index;
