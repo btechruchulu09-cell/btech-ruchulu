@@ -136,8 +136,7 @@ const Contact = () => {
                 <div>
                   <h3 className="font-semibold mb-1">Email</h3>
                   <p className="text-muted-foreground">contact@btechruchulu.com</p>
-                </div>
-              </div>
+                </div></div>
 
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 gradient-hero rounded-full flex items-center justify-center">
@@ -178,6 +177,4 @@ const Contact = () => {
       </footer>
     </div>
   );
-};
-
-export default Contact;
+};export default Contact;

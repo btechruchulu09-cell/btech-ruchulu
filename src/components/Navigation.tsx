@@ -12,9 +12,7 @@ const Navigation = () => {
     const total = cart.reduce((sum: any, item: any) => sum + item.qty, 0);
     setCartCount(total);
   };
-
   updateCart();
-
   // ✅ Listen for changes in the same tab
   const interval = setInterval(updateCart, 500);
 
@@ -26,8 +24,6 @@ const Navigation = () => {
     window.removeEventListener("storage", updateCart);
   };
 }, []);
-
-
   return (
     <nav className="bg-gray-900 text-white py-4 shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-4 flex justify-between items-center">
@@ -42,8 +38,6 @@ const Navigation = () => {
     Btech Ruchulu
   </span>
 </Link>
-
-
         {/* Nav Links */}
         <div className="flex gap-8 items-center text-lg font-medium">
           <Link

@@ -14,7 +14,6 @@ interface Product {
   type: "pickle" | "snack" | "podi";
   subCategory?: "Biscuits" | "Laddus" | "Savory Snacks" | "Traditional Sweets";
 }
-
 const whatsappNumber = "918639619426";
 const products: Product[] = [
   // 🥒 VEG PICKLES
@@ -106,6 +105,7 @@ const products: Product[] = [
 { id: 152, name: "Dry Fruit Mixed Biscuits(no maida)", category: "Snacks", subCategory: "Biscuits", price: "₹150", image: "https://www.naario.com/cdn/shop/articles/0e5abe56-f8a9-4dcd-bd55-f898361b1027-60d9e89672a53a000199bd9c.jpg?v=1705669828&width=2000", isVeg: true, type: "snack" },
 
 ];
+
 const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -274,6 +274,4 @@ const Index = () => {
       </footer>
     </div>
   );
-};
-
-export default Index;
+};export default Index;
