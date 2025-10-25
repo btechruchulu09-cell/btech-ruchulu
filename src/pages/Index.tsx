@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import Navigation from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
-import heroImage from "@/assets/hero-image.jpg";
 import { MessageCircle, Search } from "lucide-react";
+import heroImage from "@/assets/hero-image.jpg";
 
 interface Product {
   id: number;
@@ -12,9 +12,11 @@ interface Product {
   image: string;
   isVeg: boolean;
   type: "pickle" | "snack" | "podi";
-  subCategory?: "Biscuits" | "Laddus" | "Savory Snacks" | "Traditional Sweets";
+  subCategory?: string;
 }
+
 const whatsappNumber = "918639619426";
+
 const products: Product[] = [
   // 🥒 VEG PICKLES
   { id: 1, name: "Tomato Pickle", category: "Pickles", price: "₹150", image: "https://www.indianhealthyrecipes.com/wp-content/uploads/2022/01/tomato-pickle-recipe.jpg", isVeg: true, type: "pickle" },
@@ -118,6 +120,7 @@ const Index = () => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
+  // ✅ Add to Cart
   const addToCart = (product: Product) => {
     setCart((prev) => {
       const exist = prev.find((item) => item.product.id === product.id);
@@ -132,7 +135,7 @@ const Index = () => {
     });
   };
 
-  // ✅ WhatsApp Checkout With Total Price
+  // ✅ WhatsApp Checkout including Total Price
   const checkoutWhatsApp = () => {
     if (cart.length === 0) return alert("Your cart is empty!");
 
@@ -145,30 +148,22 @@ const Index = () => {
       `Hello! I want to order:\n\n${cart
         .map(
           (item, i) =>
-            `${i + 1}. ${item.product.name} - ${item.qty} qty - ${item.product.price}`
+            `${i + 1}. ${item.product.name} - ${item.qty} qty - ₹${
+              parseInt(item.product.price.replace("₹", "")) * item.qty
+            }`
         )
-        .join("\n")}\n\nTotal Items: ${cart.reduce(
-        (t, item) => t + item.qty,
-        0
-      )}\nTotal Price: ₹${totalPrice}`
+        .join("\n")}\n\nTotal Price: ₹${totalPrice}`
     );
 
     window.open(`https://wa.me/${whatsappNumber}?text=${message}`, "_blank");
   };
 
-  const filteredProducts = products.filter((p) => {
-    const matchCat =
-      selectedCategory === "all" ||
-      (selectedCategory === "veg-pickle" && p.type === "pickle" && p.isVeg) ||
-      (selectedCategory === "non-veg-pickle" && p.type === "pickle" && !p.isVeg) ||
-      (selectedCategory === "podi" && p.type === "podi") ||
-      (selectedCategory === "savory-snacks" && p.subCategory === "Savory Snacks") ||
-      (selectedCategory === "traditional-sweets" &&
-        p.subCategory === "Traditional Sweets");
-
-    const matchSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchCat && matchSearch;
-  });
+  // ✅ Search + Filter
+  const filteredProducts = products.filter(
+    (p) =>
+      p.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (selectedCategory === "all" || p.category === selectedCategory)
+  );
 
   const totalQty = cart.reduce((t, item) => t + item.qty, 0);
 
@@ -176,18 +171,17 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
 
-      {/* Hero */}
-      <section className="relative h-[500px] flex items-center justify-center overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${heroImage})` }}
-        />
-        <div className="relative z-10 text-center px-4">
-          <h1 className="text-5xl font-extrabold mb-6 bg-gradient-to-r from-orange-500 to-yellow-400 bg-clip-text text-transparent drop-shadow-lg">
-  Authentic Indian Flavors Delivered
-</h1>
+      {/* Hero Section */}
+      <section className="relative h-[500px] flex items-center justify-center">
+        <img className="absolute inset-0 w-full h-full object-cover opacity-40" src={heroImage} />
+        
+        <div className="relative z-10 text-center">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-500 to-yellow-400 bg-clip-text text-transparent">
+            Authentic Indian Flavors Delivered
+          </h1>
 
           <Button
+            className="mt-6"
             onClick={() =>
               document.getElementById("products-section")?.scrollIntoView({
                 behavior: "smooth",
@@ -199,55 +193,83 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Product Section */}
+      {/* Products */}
       <section id="products-section" className="container mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold mb-6">Our Products</h2>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-3xl font-bold">Our Products</h2>
 
-        {/* Search */}
-        <div className="relative w-full sm:w-80 mb-6">
-          <Search className="absolute left-3 top-2.5 w-5 h-5" />
-          <input
-            type="text"
-            placeholder="Search products..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="border rounded-lg pl-10 py-2 w-full"
-          />
+          {/* ✅ Search Bar Visible & Styled */}
+          <div className="relative">
+            <Search className="absolute left-3 top-2.5 w-5 h-5 text-gray-500" />
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="border rounded-lg pl-10 py-2 w-64 shadow-sm focus:ring-2 focus:ring-orange-400"
+            />
+          </div>
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {/* Product Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredProducts.map((product) => {
             const found = cart.find((i) => i.product.id === product.id);
-            return (
-              <div
-                key={product.id}
-                className="border rounded-lg shadow bg-white overflow-hidden relative"
-              >
-                {/* ✅ Show Quantity Badge on Card */}
-                {found && (
-                  <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                    x{found.qty}
-                  </span>
-                )}
 
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-56 object-cover"
+            return (
+              <div key={product.id} className="border rounded-xl shadow bg-white p-3 relative">
+                {/* Veg Icon ✅ */}
+                <span
+                  className={`absolute top-2 left-2 w-4 h-4 rounded-full ${
+                    product.isVeg ? "bg-green-600" : "bg-red-600"
+                  }`}
                 />
 
-                <div className="p-4 text-center">
-                  <h3 className="font-bold text-lg">{product.name}</h3>
-                  <p className="text-gray-600">{product.category}</p>
-                  <p className="text-primary font-bold mt-2">{product.price}</p>
+                <img src={product.image} className="w-full h-48 object-cover rounded-md" />
 
-                  <Button
-                    className="mt-3 w-full bg-green-600 hover:bg-green-700 text-white"
-                    onClick={() => addToCart(product)}
-                  >
-                    Add to Cart 🛒
-                  </Button>
+                <div className="mt-3 text-center">
+                  <h3 className="font-bold">{product.name}</h3>
+                  <p className="text-gray-500">{product.price}</p>
+
+                  {/* ✅ Updated Quantity UI Logic */}
+                  <div className="mt-3">
+                    {!found ? (
+                      <Button
+                        className="w-full bg-green-600 hover:bg-green-700"
+                        onClick={() => addToCart(product)}
+                      >
+                        Add to Cart 🛒
+                      </Button>
+                    ) : (
+                      <div className="flex justify-center items-center gap-2">
+                        <Button
+                          className="bg-red-500 hover:bg-red-600 text-white px-3"
+                          onClick={() =>
+                            setCart((prev) =>
+                              prev
+                                .map((item) =>
+                                  item.product.id === product.id
+                                    ? { ...item, qty: item.qty - 1 }
+                                    : item
+                                )
+                                .filter((item) => item.qty > 0)
+                            )
+                          }
+                        >
+                          -1
+                        </Button>
+
+                        <span className="font-bold">{found.qty}</span>
+
+                        <Button
+                          className="bg-green-500 hover:bg-green-600 text-white px-3"
+                          onClick={() => addToCart(product)}
+                        >
+                          +1
+                        </Button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             );
@@ -255,23 +277,25 @@ const Index = () => {
         </div>
       </section>
 
-      {/* ✅ Floating Cart Button */}
+      {/* ✅ Floating WhatsApp Button */}
       <Button
         onClick={checkoutWhatsApp}
-        className="fixed bottom-6 right-6 bg-green-600 p-4 text-white rounded-full shadow-lg relative"
+        className="fixed bottom-6 right-6 bg-green-600 hover:bg-green-700 text-white p-4 rounded-full shadow-xl"
       >
         <MessageCircle className="w-7 h-7" />
         {totalQty > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-xs px-2 py-1 rounded-full">
+          <span className="absolute -top-2 -right-2 bg-red-500 text-xs px-2 py-1 rounded-full">
             {totalQty}
           </span>
         )}
       </Button>
 
       {/* Footer */}
-      <footer className="bg-gray-800 mt-10 py-6 text-white text-center">
-        © 2025 Btech Ruchulu. All rights reserved.
+      <footer className="bg-gray-900 py-6 text-white text-center">
+        © 2025 Btech Ruchulu — All Rights Reserved
       </footer>
     </div>
   );
-};export default Index;
+};
+
+export default Index;
