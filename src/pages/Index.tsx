@@ -1,10 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navigation from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/hero-image.jpg";
-import { MessageCircle } from "lucide-react";
-import { Search } from "lucide-react";
-
+import { MessageCircle, Search } from "lucide-react";
 
 interface Product {
   id: number;
@@ -16,13 +14,8 @@ interface Product {
   type: "pickle" | "snack" | "podi";
   subCategory?: "Biscuits" | "Laddus" | "Savory Snacks" | "Traditional Sweets";
 }
-// ✅ WhatsApp contact setup
-  const whatsappNumber = "918639619426"; // Replace with your own (no + or spaces)
-  const whatsappMessage = "Hello! I'm interested in ordering from Btech Ruchulu.";
 
-  const isActive = (path: string) => location.pathname === path;
-  // 🔻 your product list (not repeated here for brevity — keep your full list)
-
+const whatsappNumber = "918639619426";
 const products: Product[] = [
   // 🥒 VEG PICKLES
   { id: 1, name: "Tomato Pickle", category: "Pickles", price: "₹150", image: "https://www.indianhealthyrecipes.com/wp-content/uploads/2022/01/tomato-pickle-recipe.jpg", isVeg: true, type: "pickle" },
@@ -113,142 +106,171 @@ const products: Product[] = [
 { id: 152, name: "Dry Fruit Mixed Biscuits(no maida)", category: "Snacks", subCategory: "Biscuits", price: "₹150", image: "https://www.naario.com/cdn/shop/articles/0e5abe56-f8a9-4dcd-bd55-f898361b1027-60d9e89672a53a000199bd9c.jpg?v=1705669828&width=2000", isVeg: true, type: "snack" },
 
 ];
-
 const Index = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
 
-const filteredProducts = products.filter((product) => {
-  const matchesCategory =
-    selectedCategory === "all" ||
-    (selectedCategory === "veg-pickle" && product.type === "pickle" && product.isVeg) ||
-    (selectedCategory === "non-veg-pickle" && product.type === "pickle" && !product.isVeg) ||
-    (selectedCategory === "podi" && product.type === "podi") ||
-    (selectedCategory === "savory-snacks" && product.subCategory === "Savory Snacks") ||
-    (selectedCategory === "traditional-sweets" && product.subCategory === "Traditional Sweets");
+  const [cart, setCart] = useState<{ product: Product; qty: number }[]>(() =>
+    JSON.parse(localStorage.getItem("cart") || "[]")
+  );
 
-  const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-  
-  return matchesCategory && matchesSearch;
-});
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
 
+  const addToCart = (product: Product) => {
+    setCart((prev) => {
+      const exist = prev.find((item) => item.product.id === product.id);
+      if (exist) {
+        return prev.map((item) =>
+          item.product.id === product.id
+            ? { ...item, qty: item.qty + 1 }
+            : item
+        );
+      }
+      return [...prev, { product, qty: 1 }];
+    });
+  };
+
+  // ✅ WhatsApp Checkout With Total Price
+  const checkoutWhatsApp = () => {
+    if (cart.length === 0) return alert("Your cart is empty!");
+
+    const totalPrice = cart.reduce(
+      (sum, item) => sum + parseInt(item.product.price.replace("₹", "")) * item.qty,
+      0
+    );
+
+    const message = encodeURIComponent(
+      `Hello! I want to order:\n\n${cart
+        .map(
+          (item, i) =>
+            `${i + 1}. ${item.product.name} - ${item.qty} qty - ${item.product.price}`
+        )
+        .join("\n")}\n\nTotal Items: ${cart.reduce(
+        (t, item) => t + item.qty,
+        0
+      )}\nTotal Price: ₹${totalPrice}`
+    );
+
+    window.open(`https://wa.me/${whatsappNumber}?text=${message}`, "_blank");
+  };
+
+  const filteredProducts = products.filter((p) => {
+    const matchCat =
+      selectedCategory === "all" ||
+      (selectedCategory === "veg-pickle" && p.type === "pickle" && p.isVeg) ||
+      (selectedCategory === "non-veg-pickle" && p.type === "pickle" && !p.isVeg) ||
+      (selectedCategory === "podi" && p.type === "podi") ||
+      (selectedCategory === "savory-snacks" && p.subCategory === "Savory Snacks") ||
+      (selectedCategory === "traditional-sweets" &&
+        p.subCategory === "Traditional Sweets");
+
+    const matchSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchCat && matchSearch;
+  });
+
+  const totalQty = cart.reduce((t, item) => t + item.qty, 0);
 
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
-{/* This comment works inside JSX */}
-     {/* Hero Section */}
+
+      {/* Hero */}
       <section className="relative h-[500px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${heroImage})` }}>
-          <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/80 to-background/50" />
-        </div>
-        <div className="relative z-10 container mx-auto px-4 text-center md:text-left">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4 max-w-2xl">
-            Authentic Indian{" "}
-            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              Flavors
-            </span>{" "}
-            Delivered
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl">
-            Traditional pickles, aromatic karam podis, and delicious snacks made with love and authentic recipes.
-          </p>
-          <Button variant="hero"
-  size="lg"
-  className="text-base"
-  onClick={() => {
-    const productsSection = document.getElementById("products-section");
-    if (productsSection) {
-      productsSection.scrollIntoView({ behavior: "smooth" });
-    }
-  }}>
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${heroImage})` }}
+        />
+        <div className="relative z-10 text-center px-4">
+          <h1 className="text-5xl font-extrabold mb-6 bg-gradient-to-r from-orange-500 to-yellow-400 bg-clip-text text-transparent drop-shadow-lg">
+  Authentic Indian Flavors Delivered
+</h1>
+
+          <Button
+            onClick={() =>
+              document.getElementById("products-section")?.scrollIntoView({
+                behavior: "smooth",
+              })
+            }
+          >
             Explore Products
           </Button>
         </div>
       </section>
 
-      {/* Filters */}
+      {/* Product Section */}
       <section id="products-section" className="container mx-auto px-4 py-16">
+        <h2 className="text-3xl font-bold mb-6">Our Products</h2>
 
-        <div className="mb-8">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-    <h2 className="text-3xl font-bold">Our Products</h2>
-
-    <div className="relative w-full sm:w-80">
-      <Search className="absolute left-3 top-2.5 w-5 h-5 text-muted-foreground" />
-      <input
-        type="text"
-        placeholder="Search for a product..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="border border-border rounded-lg pl-10 pr-4 py-2 w-full bg-background focus:ring-2 focus:ring-primary focus:outline-none"
-      />
-    </div>
-  </div>
-<div className="flex flex-wrap gap-2">
-            {[
-              { id: "all", label: "All Products" },
-              { id: "veg-pickle", label: "Veg Pickles" },
-              { id: "non-veg-pickle", label: "Non-Veg Pickles" },
-              { id: "podi", label: "Karam Podis" },
-              { id: "savory-snacks", label: "Snacks" },
-              { id: "traditional-sweets", label: "Sweets" },
-            ].map((filter) => (
-              <Button
-                key={filter.id}
-                variant={selectedCategory === filter.id ? "default" : "outline"}
-                onClick={() => setSelectedCategory(filter.id)}
-              >
-                {filter.label}
-              </Button>
-            ))}
-          </div>
+        {/* Search */}
+        <div className="relative w-full sm:w-80 mb-6">
+          <Search className="absolute left-3 top-2.5 w-5 h-5" />
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="border rounded-lg pl-10 py-2 w-full"
+          />
         </div>
 
-        {/* Product Grid */}
+        {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredProducts.map((product) => (
-            <div
-              key={product.id}
-              className="bg-card border rounded-xl overflow-hidden shadow hover:shadow-lg transition"
-            >
-              <img src={product.image} alt={product.name} className="w-full h-56 object-cover" />
-              <div className="p-4 text-center">
-                <h3 className="font-semibold text-lg text-gray-800">{product.name}</h3>
-                <p className="text-muted-foreground">{product.category}</p>
-                <p className="text-primary font-bold mt-2">{product.price}</p>
-                <Button  className="mt-3 w-full bg-green-600 text-white hover:bg-green-700"
-  onClick={() => {
-    const message = `Hello! I'm interested in ordering ${product.name} (${product.price}).`;
-    const phoneNumber = "918639619426"; // 🔁 Replace with your WhatsApp number (no + or spaces)
-    window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, "_blank");
-  }}>
-                  Order Now
-                </Button>
+          {filteredProducts.map((product) => {
+            const found = cart.find((i) => i.product.id === product.id);
+            return (
+              <div
+                key={product.id}
+                className="border rounded-lg shadow bg-white overflow-hidden relative"
+              >
+                {/* ✅ Show Quantity Badge on Card */}
+                {found && (
+                  <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                    x{found.qty}
+                  </span>
+                )}
+
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-56 object-cover"
+                />
+
+                <div className="p-4 text-center">
+                  <h3 className="font-bold text-lg">{product.name}</h3>
+                  <p className="text-gray-600">{product.category}</p>
+                  <p className="text-primary font-bold mt-2">{product.price}</p>
+
+                  <Button
+                    className="mt-3 w-full bg-green-600 hover:bg-green-700 text-white"
+                    onClick={() => addToCart(product)}
+                  >
+                    Add to Cart 🛒
+                  </Button>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
-      {/* ✅ Floating WhatsApp Button */}
+
+      {/* ✅ Floating Cart Button */}
       <Button
-        onClick={() =>
-          window.open(
-            `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`,
-            "_blank"
-          )
-        }
-        className="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white rounded-full p-4 shadow-lg transition-all duration-300 animate-bounce"
-        aria-label="Chat on WhatsApp"
+        onClick={checkoutWhatsApp}
+        className="fixed bottom-6 right-6 bg-green-600 p-4 text-white rounded-full shadow-lg relative"
       >
         <MessageCircle className="w-7 h-7" />
+        {totalQty > 0 && (
+          <span className="absolute -top-1 -right-1 bg-red-500 text-xs px-2 py-1 rounded-full">
+            {totalQty}
+          </span>
+        )}
       </Button>
 
       {/* Footer */}
-      <footer className="bg-card border-t border-border mt-16 py-8">
-        <div className="container mx-auto px-4 text-center text-muted-foreground">
-          <p>&copy; 2025 Btech Ruchulu. All rights reserved.</p>
-        </div>
+      <footer className="bg-gray-800 mt-10 py-6 text-white text-center">
+        © 2025 Btech Ruchulu. All rights reserved.
       </footer>
     </div>
   );

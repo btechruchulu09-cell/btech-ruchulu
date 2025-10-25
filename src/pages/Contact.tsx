@@ -4,8 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { toast } from "@/hooks/use-toast";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, MessageCircle } from "lucide-react";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -15,16 +14,23 @@ const Contact = () => {
     message: "",
   });
 
+  // ✅ WhatsApp Number
+  const whatsappNumber = "918639619426"; // ⬅️ update anytime
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Message Sent!",
-      description: "We'll get back to you as soon as possible.",
-    });
+
+    const finalMessage = `Hello! I want to contact Btech Ruchulu.\n\nName: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nMessage: ${formData.message}`;
+
+    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(finalMessage)}`;
+    window.open(url, "_blank");
+
     setFormData({ name: "", email: "", phone: "", message: "" });
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -44,13 +50,12 @@ const Contact = () => {
             </span>
           </h1>
           <p className="text-lg text-muted-foreground">
-            Have questions? We'd love to hear from you. Send us a message and we'll respond as soon
-            as possible.
+            Have questions? Reach out anytime. We respond quickly!
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
-          {/* Contact Form */}
+          {/* ✅ WhatsApp Form */}
           <div className="bg-card p-8 rounded-lg border border-border shadow-sm">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
@@ -107,8 +112,9 @@ const Contact = () => {
                 />
               </div>
 
-              <Button type="submit" className="w-full" variant="hero">
-                Send Message
+              <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
+                <MessageCircle className="w-5 h-5 mr-2" />
+                Contact on WhatsApp
               </Button>
             </form>
           </div>
@@ -118,53 +124,47 @@ const Contact = () => {
             <div>
               <h2 className="text-2xl font-bold mb-6">Contact Information</h2>
               <p className="text-muted-foreground mb-8">
-                Feel free to reach out to us through any of the following channels
+                You can also reach us directly through phone or visit us!
               </p>
             </div>
 
             <div className="space-y-6">
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 gradient-hero rounded-full flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 gradient-hero rounded-full flex items-center justify-center">
                   <Mail className="w-5 h-5 text-white" />
                 </div>
                 <div>
                   <h3 className="font-semibold mb-1">Email</h3>
                   <p className="text-muted-foreground">contact@btechruchulu.com</p>
-                  <p className="text-muted-foreground">orders@btechruchulu.com</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 gradient-hero rounded-full flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 gradient-hero rounded-full flex items-center justify-center">
                   <Phone className="w-5 h-5 text-white" />
                 </div>
                 <div>
                   <h3 className="font-semibold mb-1">Phone</h3>
-                  <p className="text-muted-foreground">+91 63037 32640</p>
-                  <p className="text-muted-foreground">+91 63037 32640</p>
+                  <p className="text-muted-foreground">+91 86396 19426</p>
                 </div>
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 gradient-hero rounded-full flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 gradient-hero rounded-full flex items-center justify-center">
                   <MapPin className="w-5 h-5 text-white" />
                 </div>
                 <div>
                   <h3 className="font-semibold mb-1">Address</h3>
-                  <p className="text-muted-foreground">
-                    123 Spice Street
-                    <br />
-                    Hyderabad, Telangana 500001
-                    <br />
-                    India
-                  </p>
+                  <p className="text-muted-foreground">Hyderabad, Telangana, India</p>
                 </div>
               </div>
             </div>
 
             <div className="bg-muted p-6 rounded-lg">
               <h3 className="font-semibold mb-2">Business Hours</h3>
-              <p className="text-muted-foreground text-sm">Monday - Saturday: 9:00 AM - 7:00 PM</p>
+              <p className="text-muted-foreground text-sm">
+                Monday - Saturday: 9:00 AM - 7:00 PM
+              </p>
               <p className="text-muted-foreground text-sm">Sunday: Closed</p>
             </div>
           </div>
