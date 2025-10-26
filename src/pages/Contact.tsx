@@ -15,7 +15,7 @@ const Contact = () => {
   });
 
   // ✅ WhatsApp Number
-  const whatsappNumber = "918639619426"; // ⬅️ update anytime
+  const whatsappNumber = "918639619426"; // Update anytime
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,25 +38,28 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
+      {/* ✅ Responsive Navbar */}
       <Navigation />
 
-      <main className="container mx-auto px-4 py-16">
+      <main className="container mx-auto px-4 py-16 flex-1">
+        {/* Header */}
         <div className="max-w-4xl mx-auto text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
             Get in{" "}
-            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-green-500 to-emerald-400 bg-clip-text text-transparent">
               Touch
             </span>
           </h1>
           <p className="text-lg text-muted-foreground">
-            Have questions? Reach out anytime. We respond quickly!
+            Have questions? Reach out anytime — we respond quickly!
           </p>
         </div>
 
+        {/* ✅ Responsive Layout */}
         <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
-          {/* ✅ WhatsApp Form */}
-          <div className="bg-card p-8 rounded-lg border border-border shadow-sm">
+          {/* Contact Form */}
+          <div className="bg-card p-8 rounded-xl border border-border shadow-sm">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <Label htmlFor="name">Name</Label>
@@ -112,34 +115,41 @@ const Contact = () => {
                 />
               </div>
 
-              <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
-                <MessageCircle className="w-5 h-5 mr-2" />
+              <Button
+                type="submit"
+                className="w-full bg-green-600 hover:bg-green-700 text-white flex justify-center items-center gap-2"
+              >
+                <MessageCircle className="w-5 h-5" />
                 Contact on WhatsApp
               </Button>
             </form>
           </div>
 
-          {/* Contact Information */}
+          {/* Contact Info */}
           <div className="space-y-8">
             <div>
-              <h2 className="text-2xl font-bold mb-6">Contact Information</h2>
+              <h2 className="text-2xl font-bold mb-4">Contact Information</h2>
               <p className="text-muted-foreground mb-8">
-                You can also reach us directly through phone or visit us!
+                You can also reach us directly via phone, email, or visit us in
+                person!
               </p>
             </div>
 
             <div className="space-y-6">
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 gradient-hero rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
                   <Mail className="w-5 h-5 text-white" />
                 </div>
                 <div>
                   <h3 className="font-semibold mb-1">Email</h3>
-                  <p className="text-muted-foreground">contact@btechruchulu.com</p>
-                </div></div>
+                  <p className="text-muted-foreground">
+                    contact@btechruchulu.com
+                  </p>
+                </div>
+              </div>
 
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 gradient-hero rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
                   <Phone className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -149,17 +159,20 @@ const Contact = () => {
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 gradient-hero rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
                   <MapPin className="w-5 h-5 text-white" />
                 </div>
                 <div>
                   <h3 className="font-semibold mb-1">Address</h3>
-                  <p className="text-muted-foreground">Hyderabad, Telangana, India</p>
+                  <p className="text-muted-foreground">
+                    Hyderabad, Telangana, India
+                  </p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-muted p-6 rounded-lg">
+            {/* Business Hours */}
+            <div className="bg-muted p-6 rounded-lg border border-border">
               <h3 className="font-semibold mb-2">Business Hours</h3>
               <p className="text-muted-foreground text-sm">
                 Monday - Saturday: 9:00 AM - 7:00 PM
@@ -170,11 +183,14 @@ const Contact = () => {
         </div>
       </main>
 
+      {/* Footer */}
       <footer className="bg-card border-t border-border mt-16 py-8">
-        <div className="container mx-auto px-4 text-center text-muted-foreground">
+        <div className="container mx-auto px-4 text-center text-muted-foreground text-sm">
           <p>&copy; 2025 Btech Ruchulu. All rights reserved.</p>
         </div>
       </footer>
     </div>
   );
-};export default Contact;
+};
+
+export default Contact;

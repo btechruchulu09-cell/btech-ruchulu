@@ -75,30 +75,39 @@ const Cart = () => {
     <div className="min-h-screen bg-gray-50">
       <Navigation />
 
-      <div className="container mx-auto px-4 py-10">
-        <h2 className="text-3xl font-bold mb-6">My Cart</h2>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-900 text-center sm:text-left">
+          My Cart
+        </h2>
 
         {cart.length === 0 ? (
-          <p className="text-gray-600 text-lg">Your cart is empty!</p>
+          <p className="text-gray-600 text-center sm:text-left text-base sm:text-lg">
+            Your cart is empty!
+          </p>
         ) : (
           <div className="space-y-4">
             {cart.map((item) => (
               <div
                 key={item.product.id}
-                className="flex items-center gap-4 bg-white p-4 rounded-lg shadow"
+                className="flex flex-col sm:flex-row items-center sm:items-start gap-4 bg-white p-4 sm:p-6 rounded-lg shadow-md"
               >
                 <img
                   src={item.product.image}
                   alt={item.product.name}
-                  className="w-20 h-20 rounded object-cover"
+                  className="w-24 h-24 sm:w-28 sm:h-28 rounded-lg object-cover"
                 />
 
-                <div className="flex-1">
-                  <h3 className="font-bold">{item.product.name}</h3>
-                  <p className="text-gray-600">{item.product.price}</p>
+                {/* Product Details */}
+                <div className="flex-1 text-center sm:text-left">
+                  <h3 className="font-semibold text-lg sm:text-xl">
+                    {item.product.name}
+                  </h3>
+                  <p className="text-gray-600 text-sm sm:text-base">
+                    {item.product.price}
+                  </p>
 
                   {/* Qty buttons */}
-                  <div className="flex items-center gap-3 mt-2">
+                  <div className="flex justify-center sm:justify-start items-center gap-3 mt-3">
                     <Button
                       variant="outline"
                       size="sm"
@@ -106,7 +115,9 @@ const Cart = () => {
                     >
                       -
                     </Button>
-                    <span className="font-semibold">{item.qty}</span>
+                    <span className="font-semibold text-base sm:text-lg">
+                      {item.qty}
+                    </span>
                     <Button
                       variant="outline"
                       size="sm"
@@ -117,20 +128,26 @@ const Cart = () => {
                   </div>
                 </div>
 
-                <Button
-                  variant="destructive"
-                  size="icon"
-                  onClick={() => removeItem(item.product.id)}
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
+                {/* Delete Button */}
+                <div className="self-center sm:self-start">
+                  <Button
+                    variant="destructive"
+                    size="icon"
+                    onClick={() => removeItem(item.product.id)}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
             ))}
 
-            <div className="mt-6 p-4 bg-white shadow rounded-lg flex justify-between items-center">
-              <p className="text-xl font-bold">Total: ₹{totalPrice}</p>
+            {/* Checkout Section */}
+            <div className="mt-8 p-4 sm:p-6 bg-white shadow-md rounded-lg flex flex-col sm:flex-row justify-between items-center gap-4">
+              <p className="text-lg sm:text-xl font-bold text-gray-800">
+                Total: ₹{totalPrice}
+              </p>
               <Button
-                className="bg-green-600 hover:bg-green-700 text-white flex gap-2 items-center"
+                className="bg-green-600 hover:bg-green-700 text-white w-full sm:w-auto flex justify-center items-center gap-2 text-sm sm:text-base py-2 sm:py-3"
                 onClick={checkoutWhatsApp}
               >
                 <MessageCircle className="w-5 h-5" />
