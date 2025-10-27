@@ -15,7 +15,7 @@ interface Product {
   subCategory?: string;
 }
 
-const whatsappNumber = "918639619426";
+const whatsappNumber = "917036912867";
 
 const products: Product[] = [
   // 🥒 VEG PICKLES
