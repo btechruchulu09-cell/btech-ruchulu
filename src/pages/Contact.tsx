@@ -15,7 +15,7 @@ const Contact = () => {
   });
 
   // ✅ WhatsApp Number
-  const whatsappNumber = "918639619426"; // Update anytime
+  const whatsappNumber = "917036912867"; // Update anytime
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -143,7 +143,7 @@ const Contact = () => {
                 <div>
                   <h3 className="font-semibold mb-1">Email</h3>
                   <p className="text-muted-foreground">
-                    contact@btechruchulu.com
+                    btechruchulu@gmail.com
                   </p>
                 </div>
               </div>
@@ -154,7 +154,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold mb-1">Phone</h3>
-                  <p className="text-muted-foreground">+91 86396 19426</p>
+                  <p className="text-muted-foreground">+91 7036912867</p>
                 </div>
               </div>
 
@@ -165,7 +165,7 @@ const Contact = () => {
                 <div>
                   <h3 className="font-semibold mb-1">Address</h3>
                   <p className="text-muted-foreground">
-                    Hyderabad, Telangana, India
+                    Survey No. 128/4B, Vitalpuram (V), Thallur (M), 523264, Prakasam District, AP
                   </p>
                 </div>
               </div>

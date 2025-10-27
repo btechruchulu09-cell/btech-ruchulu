@@ -3,7 +3,7 @@ import Navigation from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, Trash2 } from "lucide-react";
 
-const whatsappNumber = "918639619426";
+const whatsappNumber = "917036912867";
 
 interface Product {
   id: number;
