@@ -291,9 +291,34 @@ const Index = () => {
       </Button>
 
       {/* Footer */}
-      <footer className="bg-gray-900 py-6 text-white text-center">
-        © 2025 Btech Ruchulu — All Rights Reserved
-      </footer>
+      <footer className="bg-gray-900 text-white py-8">
+  <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-center md:text-left space-y-4 md:space-y-0">
+    {/* Left Section: Brand and Copyright */}
+    <div>
+      <h2 className="text-xl font-semibold">© 2025 Btech Ruchulu</h2>
+      <p className="text-gray-400 text-sm">All Rights Reserved</p>
+    </div>
+
+    {/* Right Section: Contact Info */}
+    <div className="text-gray-300">
+      <ul className="space-y-1">
+        <li>
+          📞 <span className="font-medium">Contact:</span> 7036912867
+        </li>
+        <li>
+          📍 <span className="font-medium">Address:</span> Survey No. 128/4B, Vitalpuram (V),
+          Thallur (M), 523264, Prakasam District, AP
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  {/* Bottom Line */}
+  <div className="border-t border-gray-700 mt-6 pt-4 text-center text-gray-500 text-sm">
+    Made with ❤️ by <span className="text-white font-medium">Btech Ruchulu</span>
+  </div>
+</footer>
+
     </div>
   );
 };

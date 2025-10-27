@@ -27,16 +27,21 @@ const Navigation = () => {
     <nav className="bg-gray-900 text-white py-4 shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-4 flex justify-between items-center">
         {/* Logo + Brand */}
-        <Link to="/" className="flex items-center gap-3">
-          <img
-            src={logo}
-            alt="Btech Logo"
-            className="h-10 w-10 object-contain rounded-full"
-          />
-          <span className="text-2xl font-bold tracking-wide">
-            Btech Ruchulu
-          </span>
-        </Link>
+<Link
+  to="/"
+  className="flex items-center gap-3"
+>
+  <div className="h-10 w-10 rounded-full overflow-hidden">
+    <img
+      src={logo}
+      alt="Btech Logo"
+      className="h-full w-full object-cover scale-110 transition-transform duration-500"
+    />
+  </div>
+  <span className="text-2xl font-bold tracking-wide">
+    Btech Ruchulu
+  </span>
+</Link>
 
         {/* Desktop Nav Links */}
         <div className="hidden md:flex gap-8 items-center text-lg font-medium">
