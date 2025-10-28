@@ -111,6 +111,10 @@ const products: Product[] = [
 const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
+const [filterVeg, setFilterVeg] = useState<"all" | "veg" | "non-veg">("all");
+const [filterCategory, setFilterCategory] =
+  useState<"all" | "pickle" | "sweet" | "snack" | "podi">("all");
+
 
   const [cart, setCart] = useState<{ product: Product; qty: number }[]>(() =>
     JSON.parse(localStorage.getItem("cart") || "[]")
@@ -159,11 +163,29 @@ const Index = () => {
   };
 
   // ✅ Search + Filter
-  const filteredProducts = products.filter(
-    (p) =>
-      p.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (selectedCategory === "all" || p.category === selectedCategory)
-  );
+  const filteredProducts = products.filter((product) => {
+  const matchSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+
+  const matchVeg =
+    filterVeg === "all" ||
+    (filterVeg === "veg" && product.isVeg) ||
+    (filterVeg === "non-veg" && !product.isVeg);
+
+  const matchCategory =
+  filterCategory === "all" ||
+  (filterCategory === "pickle" &&
+    ["pickle", "pickles"].includes(product.type.toLowerCase())) ||
+  (filterCategory === "sweet" &&
+    ["sweet", "sweets"].includes(product.type.toLowerCase())) ||
+  (filterCategory === "snack" &&
+    ["snack", "snacks"].includes(product.type.toLowerCase())) ||
+  (filterCategory === "podi" &&
+    ["podi", "podis", "karam podi", "karam"].includes(product.type.toLowerCase()));
+
+
+
+  return matchSearch && matchVeg && matchCategory;
+});
 
   const totalQty = cart.reduce((t, item) => t + item.qty, 0);
 
@@ -176,7 +198,7 @@ const Index = () => {
         <img className="absolute inset-0 w-full h-full object-cover opacity-40" src={heroImage} />
         
         <div className="relative z-10 text-center">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-500 to-yellow-400 bg-clip-text text-transparent">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-500 to-red-400 bg-clip-text text-transparent">
             Authentic Indian Flavors Delivered
           </h1>
 
@@ -210,6 +232,57 @@ const Index = () => {
             />
           </div>
         </div>
+          {/* Veg / Non-Veg Filter */}
+<div className="flex gap-2 mb-3">
+  <Button 
+    variant={filterVeg === "all" ? "default" : "outline"} 
+    onClick={() => setFilterVeg("all")}
+  >
+    All
+  </Button>
+  <Button 
+    variant={filterVeg === "veg" ? "default" : "outline"} 
+    onClick={() => setFilterVeg("veg")}
+  >
+    Veg ✅
+  </Button>
+  <Button 
+    variant={filterVeg === "non-veg" ? "default" : "outline"} 
+    onClick={() => setFilterVeg("non-veg")}
+  >
+    Non-Veg 🍗
+  </Button>
+</div>
+
+{/* Pickles / Snacks / Sweets Filter */}
+<div className="flex gap-2 mb-4">
+  <Button 
+    variant={filterCategory === "all" ? "default" : "outline"} 
+    onClick={() => setFilterCategory("all")}
+  >
+    All Items
+  </Button>
+  <Button 
+    variant={filterCategory === "pickle" ? "default" : "outline"} 
+    onClick={() => setFilterCategory("pickle")}
+  >
+    Pickles 🥒
+  </Button>
+  <Button 
+    variant={filterCategory === "snack" ? "default" : "outline"} 
+    onClick={() => setFilterCategory("snack")}
+  >
+    Snacks & Sweets 🍪
+  </Button>
+</div>
+<Button
+  variant={filterCategory === "podi" ? "default" : "outline"}
+  onClick={() => setFilterCategory("podi")}
+>
+  Karam Podis 🌶️
+</Button>
+
+
 
         {/* Product Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
